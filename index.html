@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,11 @@
         .obs-container textarea,
         .subject input[type="text"] {
             word-wrap: break-word;
-            word-break: break-all;
         }
 
         body {
             font-family: Arial, sans-serif;
-            background: url('02.png') no-repeat center center fixed;
+            background: url(04.png) no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 50px;
@@ -25,15 +25,16 @@
         }
 
         .form-container {
-            max-width: 600px;
+            max-width: 700px;
             font-size: 15px;
-            color: #cac9c9;
+            color: #ffffff;
             margin: 0 auto;
-            background-color: rgba(8, 8, 8, 0.8);
+            background-color: rgba(55, 53, 53, 0.8);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5);
             flex: 1;
+            width: 100%;
         }
 
         .form-container label {
@@ -44,11 +45,13 @@
 
         .form-container input[type="number"],
         .form-container input[type="text"] {
-            width: 80%;
+            width: 100%;
+            max-width: 100%;
             padding: 12px;
             border: 2px solid #2649bb;
             border-radius: 10px;
             font-size: 16px;
+            box-sizing: border-box;
             -moz-appearance: textfield;
         }
 
@@ -64,9 +67,10 @@
 
         .form-container .subject input[type="number"],
         .form-container .subject input[type="text"] {
-            width: 200px;
+            width: calc(33.33% - 4px);
             display: inline-block;
             margin-right: 2%;
+            box-sizing: border-box;
         }
 
         .form-container .subject input[type="text"] {
@@ -74,10 +78,13 @@
         }
 
         .form-container button {
-            display: block;
-            width: 70%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
             padding: 12px;
-            background-color: #2649bb;
+            background-color: #6152e7;
             color: #ffffff;
             border: none;
             border-radius: 10px;
@@ -113,13 +120,20 @@
         .rodape-flutuante {
             font-size: 15px;
             color: #ffffff;
-            padding: 10px;
+            /* Ajuste esta cor para a cor desejada */
+            padding: 5px;
             border-radius: 5px;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s, box-shadow 0.3s;
             animation: flutuar 3s ease-in-out infinite;
-            margin-top: auto;
+            margin-top: 25%;
+            /* Define o espaço entre o rodapé e o container da calculadora */
+            text-align: center;
+            /* Centraliza o texto */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Opcional: Define um fundo para o rodapé, se desejado */
         }
+
 
         .calculator-type {
             margin-bottom: 20px;
@@ -137,11 +151,13 @@
             border-radius: 10px;
             font-size: 16px;
             min-height: 100px;
+            box-sizing: border-box;
         }
 
         .obs-container button {
             display: inline-block;
-            width: 60%;
+            width: 100%;
+            max-width: 100%;
             padding: 10px;
             background-color: #2649bb;
             color: #ffffff;
@@ -165,14 +181,13 @@
             border-radius: 10px;
             font-size: 16px;
             margin-bottom: 20px;
+            box-sizing: border-box;
         }
 
-        .nota {
-            width: 50px;
-        }
-
+        .nota,
         .peso {
-            width: 50px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .tcc-grades {
@@ -181,11 +196,50 @@
         }
 
         .tcc-grades input {
-            width: 70px;
+            width: 100%;
+            max-width: 70px;
+            box-sizing: border-box;
         }
 
         #numSubjects {
-            width: 50px;
+            width: 100%;
+            max-width: 50px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos específicos para o botão "Página de Faltas" com alta especificidade */
+        .form-container .faltas-button {
+            background-color: #e7b902;
+            color: #000000;
+        }
+
+        .form-container .faltas-button:hover {
+            background-color: #FF8C00;
+            /* Cor laranja escuro no hover */
+        }
+
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-container input[type="number"],
+            .form-container input[type="text"] {
+                width: 100%;
+            }
+
+            .form-container .subject input[type="number"],
+            .form-container .subject input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .form-container button,
+            .obs-container button,
+            .form-container .faltas-button {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -194,7 +248,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('generatePDF').addEventListener('click', generatePDF);
             document.getElementById('numSubjects').addEventListener('change', updateSubjectFields);
-
             toggleTccWeightField();
         });
 
@@ -205,23 +258,23 @@
             subjectsContainer.innerHTML = "";
 
             const subjectNames = [
-                "Teoria do Direito", 
-                "Princípios Institucionais da Advocacia de Estado", 
-                "Novas Tendências em Direito Constitucional", 
-                "Novas Tendências em Direito Administrativo", 
-                "Gestão Pública e Advocacia de Estado", 
-                "Assessoria e Consultoria Jurídica em Projetos de Infraestrutura", 
-                "Direito e Políticas Públicas", 
-                "Direito Ambiental e Sustentabilidade", 
-                "Advocacia Pública Fiscal e Tributária", 
-                "Sistemas de Integridade Pública e Privada", 
-                "Contratos Administrativos e Responsabilidade Civil do Estado", 
-                "Fazenda Pública em Juízo", 
-                "Métodos Extrajudiciais de Resolução de Conflitos", 
-                "Relações Contratuais de Trabalho na Administração Pública", 
-                "Regime Jurídico dos Servidores Públicos", 
-                "Regime Previdenciário dos Servidores Públicos", 
-                "Defesa de Políticas Públicas em Juízo", 
+                "Teoria do Direito",
+                "Princípios Institucionais da Advocacia de Estado",
+                "Novas Tendências em Direito Constitucional",
+                "Novas Tendências em Direito Administrativo",
+                "Gestão Pública e Advocacia de Estado",
+                "Assessoria e Consultoria Jurídica em Projetos de Infraestrutura",
+                "Direito e Políticas Públicas",
+                "Direito Ambiental e Sustentabilidade",
+                "Advocacia Pública Fiscal e Tributária",
+                "Sistemas de Integridade Pública e Privada",
+                "Contratos Administrativos e Responsabilidade Civil do Estado",
+                "Fazenda Pública em Juízo",
+                "Métodos Extrajudiciais de Resolução de Conflitos",
+                "Relações Contratuais de Trabalho na Administração Pública",
+                "Regime Jurídico dos Servidores Públicos",
+                "Regime Previdenciário dos Servidores Públicos",
+                "Defesa de Políticas Públicas em Juízo",
                 "Metodologia"
             ];
 
@@ -365,13 +418,19 @@
             document.getElementById('removeObsButton').style.display = 'none';
         }
 
-        function generateQRCode(name, turma, average, tccAverage, observations, date, size = 150) {
-            const qrText = `Nome: ${name}\nTurma: ${turma}\nMédia Ponderada: ${average}\nMédia do TCC: ${tccAverage}\nObservações: ${observations}\nData: ${date}`;
+        function generateQRCode(name, turma, average, tccAverage, observations, date, size = 100) { // Ajuste o tamanho aqui
+            const authKey = generateAuthKey(); // Gere a chave de autenticação
+            const qrText = `Nome: ${name}\nTurma: ${turma}\nMédia Ponderada: ${average}\nMédia do TCC: ${tccAverage}\nObservações: ${observations}\nData: ${date}\nChave de Autenticação: ${authKey}`; // Adicione a chave ao texto do QR
             const qr = new QRious({
                 value: qrText,
                 size: size
             });
             return qr.toDataURL();
+        }
+
+        function generateAuthKey() {
+            // Função para gerar uma chave de autenticação aleatória
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
         async function generatePDF() {
@@ -407,7 +466,7 @@
             const date = new Date().toLocaleDateString('pt-BR');
 
             // Posicionar o QR Code no canto superior direito
-            const qrCodeData = generateQRCode(studentName, studentClass, average, tccAverage, savedObservations, date, 150);
+            const qrCodeData = generateQRCode(studentName, studentClass, average, tccAverage, savedObservations, date, 100);
             const qrCodeX = pageWidth - margins.right - 4;
             const qrCodeY = margins.top;
             doc.addImage(qrCodeData, 'JPEG', qrCodeX, qrCodeY, 4, 4);
@@ -497,15 +556,16 @@
         }
     </script>
 </head>
+
 <body>
     <div class="form-container">
         <h1>MÉDIA PONDERADA</h1>
-        <label for="studentName" aria-label="Nome do Aluno">Nome do Aluno:</label>
+        <label for="studentName" aria-label="Nome do Aluno"></label>
         <input type="text" id="studentName" placeholder="Nome do Aluno" required aria-required="true">
-        <label for="studentClass" aria-label="Turma">Turma:</label>
+        <label for="studentClass" aria-label="Turma"></label>
         <input type="text" id="studentClass" placeholder="Turma" class="turma" required aria-required="true">
         <label for="numSubjects" aria-label="Número de Matérias">Número de Matérias:</label>
-        <input type="number" id="numSubjects" min="1" max="25" aria-required="true">
+        <input type="number" id="numSubjects" min="1" max="25" value="" aria-required="true">
         <div id="subjectsContainer"></div>
         <div id="addTccContainer"></div>
         <div id="tccFields">
@@ -531,7 +591,8 @@
             <label for="obs">Observações:</label>
             <textarea id="obs" placeholder="Digite as observações (máximo 180 caracteres)"></textarea>
             <button type="button" onclick="saveObservations()">Salvar Observações</button>
-            <button type="button" id="removeObsButton" onclick="removeObservations()" style="display:none;">Remover Observações</button>
+            <button type="button" id="removeObsButton" onclick="removeObservations()" style="display:none;">Remover
+                Observações</button>
             <p id="savedObs" style="color: white;"></p>
         </div>
         <button type="button" onclick="calculateAverage()">Calcular Média</button>
@@ -539,9 +600,12 @@
             <p id="average"></p>
         </div>
         <button type="button" id="generatePDF">Gerar PDF</button>
+        <button type="button" class="faltas-button" onclick="window.location.href='faltas.html'">Calculadora de
+            Porcentagem de Faltas</button>
     </div>
     <div class="rodape-flutuante">
         <p style="text-align: center;">Desenvolvido por Carlos Antonio de Oliveira Piquet</p>
     </div>
 </body>
+
 </html>
